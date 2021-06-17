@@ -1,16 +1,26 @@
-﻿using UnityEngine;
+﻿using Zenject;
+using UnityEngine;
 using UnityEngine.SceneManagement;
 
 public class GameController : MonoBehaviour
 {
-    [SerializeField] private Spawner spawner;
-    [SerializeField] private Player playerController;
-    [SerializeField] private Score score;
-    [SerializeField] private InfoPlane infoPlane;
+    private Spawner _spawner;
+    private Player _playerController;
+    private Score _score;
+    private InfoPlane _infoPlane;
+
+    [Inject]
+    public void Construct(Spawner spawner, Player playerController, Score score, InfoPlane infoPlane)
+    {
+        _spawner = spawner;
+        _playerController = playerController;
+        _score = score;
+        _infoPlane = infoPlane;
+    }
 
     void Start()
     {
-        spawner.SpawnStartingSet();
+        _spawner.SpawnStartingSet();
     }
 
     void Update()
@@ -20,27 +30,27 @@ public class GameController : MonoBehaviour
             StartTheGame();
         }
 
-        if (!playerController.IsAlive())
+        if (!_playerController.IsAlive())
         {
-            score.StopScore();
+            _score.StopScore();
         }
 
-        if (playerController.isDestroyBlocksMode)
+        if (_playerController.isDestroyBlocksMode)
         {
-            infoPlane.MakeVisible();
-            infoPlane.SetText("Destroy block mode");
+            _infoPlane.MakeVisible();
+            _infoPlane.SetText("Destroy block mode");
         }
-        else if (playerController.isSizeReducerMode)
+        else if (_playerController.isSizeReducerMode)
         {
-            infoPlane.MakeVisible();
-            infoPlane.SetText("Size reducer mode");
+            _infoPlane.MakeVisible();
+            _infoPlane.SetText("Size reducer mode");
         }
         else
         {
-            infoPlane.Hide();
+            _infoPlane.Hide();
         }
         
-        if (!playerController.IsAnimationPlaying())
+        if (!_playerController.IsAnimationPlaying())
         {
             StopTheGame();
         }
@@ -48,9 +58,9 @@ public class GameController : MonoBehaviour
 
     private void StartTheGame()
     {
-        score.RunScore();
-        playerController.TurnOnControls();
-        spawner.MoveBlocks();
+        _score.RunScore();
+        _playerController.TurnOnControls();
+        _spawner.MoveBlocks();
     }
 
     private void StopTheGame()
