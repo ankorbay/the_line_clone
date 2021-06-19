@@ -1,12 +1,18 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
+using Zenject;
 
 public class DestroyerPool : MonoBehaviour
 {
     public static DestroyerPool Instance { get; private set; }
 
-    [SerializeField]
-    private PooledDestroyer prefab;
+    private PooledDestroyer.Factory _pooledDestroyerFactory;
+
+    [Inject]
+    public void Construct(PooledDestroyer.Factory pooledDestroyerFactory)
+    {
+        this._pooledDestroyerFactory = pooledDestroyerFactory;
+    }
 
     private Queue<PooledDestroyer> destroyersAvailable = new Queue<PooledDestroyer>();
 
@@ -29,7 +35,7 @@ public class DestroyerPool : MonoBehaviour
     {
         for (int i = 0; i < count; i++)
         {
-            PooledDestroyer destroyer = Instantiate(prefab) as PooledDestroyer;
+            PooledDestroyer destroyer = _pooledDestroyerFactory.Create();
             destroyer.gameObject.SetActive(false);
             destroyersAvailable.Enqueue(destroyer);
         }

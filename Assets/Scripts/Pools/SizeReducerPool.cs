@@ -1,11 +1,18 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
+using Zenject;
 
 public class SizeReducerPool : MonoBehaviour
 {
     public static SizeReducerPool Instance { get; private set; }
 
-    [SerializeField] private PooledSizeReducer prefab;
+    private PooledSizeReducer.Factory _pooledSizeReducerFactory;
+
+    [Inject]
+    public void Construct(PooledSizeReducer.Factory pooledSizeReducerFactory)
+    {
+        this._pooledSizeReducerFactory = pooledSizeReducerFactory;
+    }
 
     private Queue<PooledSizeReducer> sizeReducersAvailable = new Queue<PooledSizeReducer>();
 
@@ -28,7 +35,7 @@ public class SizeReducerPool : MonoBehaviour
     {
         for (int i = 0; i < count; i++)
         {
-            PooledSizeReducer sizeReducer = Instantiate(prefab) as PooledSizeReducer;
+            PooledSizeReducer sizeReducer = _pooledSizeReducerFactory.Create();
             sizeReducer.gameObject.SetActive(false);
             sizeReducersAvailable.Enqueue(sizeReducer);
         }

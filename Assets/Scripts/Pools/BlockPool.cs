@@ -1,12 +1,18 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
+using Zenject;
 
 public class BlockPool : MonoBehaviour
 {
     public static BlockPool Instance { get; private set; }
 
-    [SerializeField]
-    private PooledBlock prefab;
+    private PooledBlock.Factory _pooledBlockFactory;
+
+    [Inject]
+    public void Construct(PooledBlock.Factory pooledBlockFactory)
+    {
+        this._pooledBlockFactory = pooledBlockFactory;
+    }
 
     private Queue<PooledBlock> blocksAvailable = new Queue<PooledBlock>();
 
@@ -24,7 +30,7 @@ public class BlockPool : MonoBehaviour
     {
         for (int i = 0; i < count; i++)
         {
-            PooledBlock block = Instantiate(prefab) as PooledBlock;
+            PooledBlock block = _pooledBlockFactory.Create();
             block.gameObject.SetActive(false);
             blocksAvailable.Enqueue(block);
         }

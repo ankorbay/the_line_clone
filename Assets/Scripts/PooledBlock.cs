@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using DG.Tweening;
+using Zenject;
 
 public class PooledBlock : MonoBehaviour
 {
@@ -97,4 +98,7 @@ public class PooledBlock : MonoBehaviour
 
     #endregion
 
+    public class Factory : PlaceholderFactory<PooledBlock>
+    {
+    }
 }
