@@ -4,23 +4,25 @@ using UnityEngine.SceneManagement;
 
 public class GameController : MonoBehaviour
 {
-    private Spawner _spawner;
-    private Player _playerController;
-    private Score _score;
-    private InfoPlane _infoPlane;
+    private Spawner spawner;
+    private Player playerController;
+    private PositionTracker positionTracker;
+    private Score score;
+    private InfoPlane infoPlane;
 
     [Inject]
-    public void Init(Spawner spawner, Player playerController, Score score, InfoPlane infoPlane)
+    public void Init(Spawner spawner, Player playerController, Score score, InfoPlane infoPlane, PositionTracker positionTracker)
     {
-        _spawner = spawner;
-        _playerController = playerController;
-        _score = score;
-        _infoPlane = infoPlane;
+        this.spawner = spawner;
+        this.playerController = playerController;
+        this.score = score;
+        this.infoPlane = infoPlane;
+        this.positionTracker = positionTracker;
     }
 
     void Start()
     {
-        _spawner.SpawnStartingSet();
+        spawner.SpawnStartingSet();
     }
 
     void Update()
@@ -30,39 +32,40 @@ public class GameController : MonoBehaviour
             StartTheGame();
         }
 
-        if (!_playerController.IsAlive())
+        if (!playerController.IsAlive())
         {
-            _score.StopScore();
+            score.StopScore();
+            positionTracker.TurnOffControls();
+
+            if (!playerController.IsAnimationPlaying())
+            {
+                StopTheGame();
+            }
         }
 
-        if (_playerController.isDestroyBlocksMode)
+        if (playerController.isDestroyBlocksMode)
         {
-            _infoPlane.MakeVisible();
-            int timeLeft = _playerController.GetModeActiveTimeLeft();
-            _infoPlane.SetText("Destroy block mode time left " + timeLeft);
+            infoPlane.MakeVisible();
+            int timeLeft = playerController.GetModeActiveTimeLeft();
+            infoPlane.SetText("Destroy block mode time left " + timeLeft);
         }
-        else if (_playerController.isSizeReducerMode)
+        else if (playerController.isSizeReducerMode)
         {
-            _infoPlane.MakeVisible();
-            int timeLeft = _playerController.GetModeActiveTimeLeft();
-            _infoPlane.SetText("Size reducer mode time left " + timeLeft);
+            infoPlane.MakeVisible();
+            int timeLeft = playerController.GetModeActiveTimeLeft();
+            infoPlane.SetText("Size reducer mode time left " + timeLeft);
         }
         else
         {
-            _infoPlane.Hide();
-        }
-        
-        if (!_playerController.IsAnimationPlaying())
-        {
-            StopTheGame();
+            infoPlane.Hide();
         }
     }
 
     private void StartTheGame()
     {
-        _score.RunScore();
-        _playerController.TurnOnControls();
-        _spawner.MoveBlocks();
+        score.RunScore();
+        positionTracker.TurnOnControls();
+        spawner.MoveBlocks();
     }
 
     private void StopTheGame()

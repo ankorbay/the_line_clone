@@ -13,6 +13,7 @@ public class GameInstaller : MonoInstaller<GameInstaller>
         Container.Bind<Player>().FromInstance(FindObjectOfType<Player>());
         Container.Bind<Score>().FromInstance(FindObjectOfType<Score>());
         Container.Bind<InfoPlane>().FromInstance(FindObjectOfType<InfoPlane>());
+        Container.Bind<PositionTracker>().FromInstance(FindObjectOfType<PositionTracker>());
 
         Container.BindFactory<PooledBlock, PooledBlock.Factory>().FromComponentInNewPrefab(blockPrefab);
         Container.BindFactory<PooledSizeReducer, PooledSizeReducer.Factory>().FromComponentInNewPrefab(sizeReducerPrefab);

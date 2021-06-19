@@ -7,33 +7,25 @@ public class Player : MonoBehaviour
     public bool isDestroyBlocksMode = false;
     public bool isSizeReducerMode = false;
 
+    public PositionTracker positionTracker;
+
     private int modeActiveTimeLeft;
     private bool isAlive = true;
     private bool isAnimationPlaying = true;
-    private bool useInputDataForPositioning = false;
+
     private new Rigidbody2D rigidbody;
     private PooledBlock blockCollided;
-    private float width;
-    private float height;
+
 
     void Start()
     {
-        width = (float)Screen.width / 2.0f;
-        height = (float)Screen.height / 2.0f;
-        transform.position = new Vector3(0f, -1.5f, 0f);
         rigidbody = GetComponent<Rigidbody2D>();
     }
 
     void Update()
     {
-        UpdatePlayerPos();
 
         CheckIfCollisionAnimationComplete();
-
-        if (isDestroyBlocksMode || isSizeReducerMode)
-        {
-            
-        }
     }
 
     public int GetModeActiveTimeLeft()
@@ -52,14 +44,6 @@ public class Player : MonoBehaviour
         if (blockCollided != null)
         {
             if (blockCollided.isAnimationComplete) isAnimationPlaying = false;
-        }
-    }
-
-    private void UpdatePlayerPos()
-    {
-        if (isAlive)
-        {
-            transform.position = GetLastTouchPos();
         }
     }
 
@@ -120,11 +104,6 @@ public class Player : MonoBehaviour
         isSizeReducerMode = false;
     }
 
-    public void TurnOnControls()
-    {
-        useInputDataForPositioning = true;
-    }
-
     public bool IsAlive()
     {
         return isAlive;
@@ -171,25 +150,5 @@ public class Player : MonoBehaviour
 
     #endregion
 
-    private Vector3 GetLastTouchPos()
-    {
-        Vector3 posTracked = new Vector3(0f, 0f, 0f);
-        if (useInputDataForPositioning) posTracked = Camera.main.ScreenToWorldPoint(Input.mousePosition);
 
-        if (Input.touchCount > 0)
-        {
-            Touch touch = Input.GetTouch(0);
-
-            if (touch.phase == TouchPhase.Began)
-            {
-                Vector2 pos = touch.position;
-                pos.x = (pos.x - width) / width;
-                pos.y = (pos.y - height) / height;
-
-                posTracked.x = pos.x;
-            }
-        }
-
-        return new Vector3(posTracked.x, -1.5f, 0f);
-    }
 }
