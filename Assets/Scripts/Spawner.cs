@@ -7,13 +7,13 @@ public class Spawner : MonoBehaviour
     [SerializeField][Range(0, 10)] private float speed = 8.5f;
 
     private bool isGameRunning = false;
-    private PooledBlock lastBlockSpawned;
+    private bool isBonusSpawned = false;
     private Vector3 blockScale;
     private Vector2 blocksMovementStep;
     private new Camera camera;
-
+    private PooledBlock lastBlockSpawned;
     public Queue<int> lastEmptyBlockIndices;
-
+    
     private void Awake()
     {
         camera = Camera.main;
@@ -27,19 +27,19 @@ public class Spawner : MonoBehaviour
         BlockPool.Instance.AddBlocks(100);
         SizeReducerPool.Instance.AddSizeReducers(1);
         DestroyerPool.Instance.AddDestroyers(1);
+
+        SpawnStartingSet();
     }
 
     private void Update()
     {
-        if (spawningCondition() && isGameRunning)
+        if (BlockSpawningCondition())
         {
             SpawnRow(9, false);
         }
     }
 
-    #region Spawning
-
-    public void SpawnStartingSet()
+    private void SpawnStartingSet()
     {
         for (int i = 1; i < 10; i++)
         {
@@ -49,20 +49,37 @@ public class Spawner : MonoBehaviour
 
     private void SpawnDestroyer(Vector2 pos)
     {
+        isBonusSpawned = true;
+
         PooledDestroyer destroyer = DestroyerPool.Instance.Get();
         destroyer.gameObject.transform.position = new Vector3(pos.x, pos.y, 0f);
         destroyer.gameObject.SetActive(true);
         destroyer.DestoyOnTimeOut(12f);
         SetUpObjectMovement(destroyer.gameObject, false);
+        SetNextSpawnMinTimeout(12f);
+    }
+
+    private void SetNextSpawnMinTimeout(float timeoutSec)
+    {
+        Sequence myTimeoutSequence = DOTween.Sequence();
+        myTimeoutSequence.AppendInterval(timeoutSec);
+        myTimeoutSequence.AppendCallback(EnableBonusSpawning);
+        void EnableBonusSpawning()
+        {
+            isBonusSpawned = false;
+        }
     }
 
     private void SpawnSizeReducer(Vector2 pos)
     {
+        isBonusSpawned = true;
+
         PooledSizeReducer sizeReducer = SizeReducerPool.Instance.Get();
         sizeReducer.gameObject.transform.position = new Vector3(pos.x, pos.y, 0f);
         sizeReducer.gameObject.SetActive(true);
         sizeReducer.DestoyOnTimeOut(12f);
         SetUpObjectMovement(sizeReducer.gameObject, false);
+        SetNextSpawnMinTimeout(12f);
     }
 
     private void SpawnBlock(Vector2 pos, bool pauseOnStart)
@@ -77,12 +94,12 @@ public class Spawner : MonoBehaviour
         SetUpObjectMovement(block.gameObject, pauseOnStart);
     }
 
-    private bool spawningCondition()
+    private bool BlockSpawningCondition()
     {
         float pos = lastBlockSpawned.gameObject.transform.position.y;
-        bool isWentDownOneBlock = pos <= blocksMovementStep.y * 4.05f;
+        bool isWentDownOneBlock = pos <= blocksMovementStep.y * 4.02f;
         bool isLastBlockHigherThanViewport = pos > blocksMovementStep.y * 3.1f;
-        return isWentDownOneBlock && isLastBlockHigherThanViewport;
+        return isWentDownOneBlock && isLastBlockHigherThanViewport && isGameRunning;
     }
 
     private void SpawnRow(int rowNum, bool pauseOnStart)
@@ -98,12 +115,7 @@ public class Spawner : MonoBehaviour
                 SpawnBlock(new Vector2(posX, posY), pauseOnStart);
             } else
             {
-                if (PassFail(0.02f)) {
-                    SpawnDestroyer(new Vector2(posX, posY));
-                } else if(PassFail(0.02f))
-                {
-                    SpawnSizeReducer(new Vector2(posX, posY));
-                }
+                SpawnBonus(posY, posX);
             }
         }
 
@@ -113,6 +125,20 @@ public class Spawner : MonoBehaviour
         foreach (var index in valuesArray)
         {
             lastEmptyBlockIndices.Enqueue(index);
+        }
+    }
+
+    private void SpawnBonus(float posY, float posX)
+    {
+        if (!isBonusSpawned)
+        {
+            if (PassFail(0.3f))
+            {
+                SpawnDestroyer(new Vector2(posX, posY));
+            } else if (PassFail(0.3f))
+            {
+                SpawnSizeReducer(new Vector2(posX, posY));
+            }
         }
     }
 
@@ -164,9 +190,8 @@ public class Spawner : MonoBehaviour
         return newRowIndices;
     }
 
-    #endregion
-
     #region Transformation
+
     public void MoveBlocks()
     {
         isGameRunning = true;

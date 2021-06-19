@@ -1,14 +1,20 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
+using Zenject;
 
-public class PositionTracker : MonoBehaviour
+public class PlayerPositionController : MonoBehaviour
 {
     private bool useInputDataForPositioning = false;
 
     private float width;
     private float height;
+
+    private TouchPlane touchPlane;
+
+    [Inject]
+    private void Construct(TouchPlane touchPlane)
+    {
+        this.touchPlane = touchPlane;
+    }
 
     void Start()
     {
@@ -43,10 +49,18 @@ public class PositionTracker : MonoBehaviour
 
     private Vector3 GetLastTouchPos()
     {
-        Vector3 posTracked = new Vector3(0f, 0f, 0f);
-        if (useInputDataForPositioning) posTracked = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+        Vector2 limits = touchPlane.GetWorldPosTopAndBottomLimits();
+        Vector3 lastPos = transform.position;
+        Vector3 posTracked = Camera.main.ScreenToWorldPoint(Input.mousePosition);
 
-        if (Input.touchCount > 0)
+        Vector3 resultPos = lastPos;
+
+        if (posTracked.y >= limits.x && posTracked.y <= limits.y) // tracking mouse position
+        {
+            resultPos = new Vector3(posTracked.x, -1.5f, 0f);
+        }
+
+        if (Input.touchCount > 0) // tracking mobile touches
         {
             Touch touch = Input.GetTouch(0);
 
@@ -56,10 +70,13 @@ public class PositionTracker : MonoBehaviour
                 pos.x = (pos.x - width) / width;
                 pos.y = (pos.y - height) / height;
 
-                posTracked.x = pos.x;
+                if (pos.y >= limits.x && pos.y <= limits.y)
+                {
+                    resultPos.x = pos.x;
+                }
             }
         }
 
-        return new Vector3(posTracked.x, -1.5f, 0f);
+        return resultPos;
     }
 }

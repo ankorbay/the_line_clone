@@ -6,23 +6,18 @@ public class GameController : MonoBehaviour
 {
     private Spawner spawner;
     private Player playerController;
-    private PositionTracker positionTracker;
+    private PlayerPositionController playerPositionController;
     private Score score;
     private InfoPlane infoPlane;
 
     [Inject]
-    public void Init(Spawner spawner, Player playerController, Score score, InfoPlane infoPlane, PositionTracker positionTracker)
+    public void Init(Spawner spawner, Player playerController, Score score, InfoPlane infoPlane, PlayerPositionController playerPositionController)
     {
         this.spawner = spawner;
         this.playerController = playerController;
         this.score = score;
         this.infoPlane = infoPlane;
-        this.positionTracker = positionTracker;
-    }
-
-    void Start()
-    {
-        spawner.SpawnStartingSet();
+        this.playerPositionController = playerPositionController;
     }
 
     void Update()
@@ -35,7 +30,7 @@ public class GameController : MonoBehaviour
         if (!playerController.IsAlive())
         {
             score.StopScore();
-            positionTracker.TurnOffControls();
+            playerPositionController.TurnOffControls();
 
             if (!playerController.IsAnimationPlaying())
             {
@@ -64,7 +59,7 @@ public class GameController : MonoBehaviour
     private void StartTheGame()
     {
         score.RunScore();
-        positionTracker.TurnOnControls();
+        playerPositionController.TurnOnControls();
         spawner.MoveBlocks();
     }
 

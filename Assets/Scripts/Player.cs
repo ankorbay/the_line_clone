@@ -7,8 +7,6 @@ public class Player : MonoBehaviour
     public bool isDestroyBlocksMode = false;
     public bool isSizeReducerMode = false;
 
-    public PositionTracker positionTracker;
-
     private int modeActiveTimeLeft;
     private bool isAlive = true;
     private bool isAnimationPlaying = true;
@@ -24,7 +22,6 @@ public class Player : MonoBehaviour
 
     void Update()
     {
-
         CheckIfCollisionAnimationComplete();
     }
 
