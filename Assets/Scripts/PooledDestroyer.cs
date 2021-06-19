@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using DG.Tweening;
+using Zenject;
 
 public class PooledDestroyer : MonoBehaviour
 {
@@ -20,5 +21,9 @@ public class PooledDestroyer : MonoBehaviour
     private void OnCollisionEnter2D(Collision2D collision)
     {
         Destroy();
+    }
+
+    public class Factory : PlaceholderFactory<PooledDestroyer>
+    {
     }
 }

@@ -133,14 +133,13 @@ GameObject:
   - component: {fileID: 127466366}
   - component: {fileID: 127466365}
   - component: {fileID: 127466364}
-  - component: {fileID: 127466367}
   m_Layer: 5
   m_Name: InfoPlane
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &127466363
 RectTransform:
   m_ObjectHideFlags: 0
@@ -241,18 +240,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 127466362}
   m_CullTransparentMesh: 0
---- !u!114 &127466367
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 127466362}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4ebb800b2f132409797e0ac45c3ebe58, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &215118434
 GameObject:
   m_ObjectHideFlags: 0
@@ -1083,7 +1070,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fef83a932bf1b4d3287cefed67ce8f31, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  prefab: {fileID: 6355276438776129465, guid: a1e24238ad38b4ab786e61fcddeaff96, type: 3}
 --- !u!4 &1385020870
 Transform:
   m_ObjectHideFlags: 0
@@ -1219,7 +1205,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dbe2ef1d6b63d4057b38d62cc793ec07, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  prefab: {fileID: 8924787716232570841, guid: 3bd00421f715240699104814a8a0d11c, type: 3}
 --- !u!4 &1596203724
 Transform:
   m_ObjectHideFlags: 0
@@ -1310,6 +1295,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f7ba772e9ca004ac09b5954aa8618942, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  sizeReducerPrefab: {fileID: 1249485873070328289, guid: e7e768595883e4aec9b9a47ec531aabf,
+    type: 3}
+  destroyerPrefab: {fileID: 2681144215770344726, guid: a1e24238ad38b4ab786e61fcddeaff96,
+    type: 3}
+  blockPrefab: {fileID: 1415699665978157652, guid: 3bd00421f715240699104814a8a0d11c,
+    type: 3}
 --- !u!1 &2066481060
 GameObject:
   m_ObjectHideFlags: 0
@@ -1339,7 +1330,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9137b3aed2070478ca5daaae1339543e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  prefab: {fileID: 2256363281259168081, guid: e7e768595883e4aec9b9a47ec531aabf, type: 3}
 --- !u!4 &2066481062
 Transform:
   m_ObjectHideFlags: 0

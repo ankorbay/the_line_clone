@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using DG.Tweening;
+using Zenject;
 
 public class PooledSizeReducer : MonoBehaviour
 {
@@ -21,4 +22,9 @@ public class PooledSizeReducer : MonoBehaviour
     {
         Destroy();
     }
+
+    public class Factory : PlaceholderFactory<PooledSizeReducer>
+    {
+    }
+
 }

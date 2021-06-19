@@ -1,11 +1,13 @@
 ﻿using UnityEngine;
 using DG.Tweening;
+using System;
 
 public class Player : MonoBehaviour
 {
     public bool isDestroyBlocksMode = false;
     public bool isSizeReducerMode = false;
 
+    private int modeActiveTimeLeft;
     private bool isAlive = true;
     private bool isAnimationPlaying = true;
     private bool useInputDataForPositioning = false;
@@ -14,7 +16,7 @@ public class Player : MonoBehaviour
     private float width;
     private float height;
 
-    void Awake()
+    void Start()
     {
         width = (float)Screen.width / 2.0f;
         height = (float)Screen.height / 2.0f;
@@ -24,25 +26,61 @@ public class Player : MonoBehaviour
 
     void Update()
     {
-        if (isAlive)
-        {
-            transform.position = GetLastTouchPos();
-        }
+        UpdatePlayerPos();
 
-        if(blockCollided != null)
+        CheckIfCollisionAnimationComplete();
+
+        if (isDestroyBlocksMode || isSizeReducerMode)
+        {
+            
+        }
+    }
+
+    public int GetModeActiveTimeLeft()
+    {
+        if(isDestroyBlocksMode || isSizeReducerMode)
+        {
+            return modeActiveTimeLeft;
+        } else
+        {
+            return 0;
+        }
+    }
+
+    private void CheckIfCollisionAnimationComplete()
+    {
+        if (blockCollided != null)
         {
             if (blockCollided.isAnimationComplete) isAnimationPlaying = false;
         }
     }
 
+    private void UpdatePlayerPos()
+    {
+        if (isAlive)
+        {
+            transform.position = GetLastTouchPos();
+        }
+    }
+
     #region Modes and State Management
 
-    private void TurnOnDestroyMode()
+    private void TurnOnDestroyMode(int modeDuration)
     {
         isDestroyBlocksMode = true;
         Sequence sequence = DOTween.Sequence();
-        sequence.AppendInterval(10f);
+        sequence.AppendInterval(modeDuration);
+        for (int i = 0; i <= modeDuration; i++)
+        {
+            int timeLeft = modeDuration - i;
+            sequence.InsertCallback( i, ()=>UpdateTimeLeft(timeLeft));
+        }
         sequence.AppendCallback(TurnOffDestroyMode);
+    }
+
+    private void UpdateTimeLeft(int i)
+    {
+        modeActiveTimeLeft = i;
     }
 
     private void TurnOffDestroyMode()
@@ -53,20 +91,26 @@ public class Player : MonoBehaviour
     private void TurnOnSizeReducerMode()
     {
         isSizeReducerMode = true;
-        ScaleDown();
+        ScaleDown(10);
     }
 
-    private void ScaleDown()
+    private void ScaleDown(int modeDuration)
     {
-        Tween scaleTween = gameObject.transform.DOScale(gameObject.transform.localScale * 0.4f, 1f);
+        int scaleUpDownDuration = 1;
+        Tween scaleTween = gameObject.transform.DOScale(gameObject.transform.localScale * 0.4f, scaleUpDownDuration);
 
         Sequence sequence = DOTween.Sequence();
         sequence.Append(scaleTween);
-        sequence.AppendInterval(10f);
-        sequence.AppendCallback(ScaleUp);
+        sequence.AppendInterval(modeDuration);
+        for (int i = 0; i <= modeDuration; i++)
+        {
+            int timeLeft = modeDuration - i;
+            sequence.InsertCallback(i, () => UpdateTimeLeft(timeLeft));
+        }
+        sequence.AppendCallback(()=>ScaleUp(scaleUpDownDuration));
     }
 
-    private void ScaleUp()
+    private void ScaleUp(int duration)
     {
         gameObject.transform.DOScale(gameObject.transform.localScale / 0.4f, 1f).OnComplete(TurnOffSizeReducerMode);
     }
@@ -117,7 +161,7 @@ public class Player : MonoBehaviour
         }
         else if (colliderGO.name == "Destroyer(Clone)")
         {
-            TurnOnDestroyMode();
+            TurnOnDestroyMode(10);
         }
         else if (colliderGO.name == "SizeReducer(Clone)")
         {
