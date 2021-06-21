@@ -21,7 +21,6 @@ public class PooledBlock : MonoBehaviour
 
     public Vector3 CalculateBlockScale()
     {
-        Debug.Log(Camera.main.orthographicSize * 2f * Screen.width / Screen.height);
         Vector3 result = new Vector3(Camera.main.orthographicSize / 1.5f, Camera.main.orthographicSize * Screen.height/Screen.width / 1.5f, 1f);
      
         return result;
