@@ -21,7 +21,18 @@ public class PooledBlock : MonoBehaviour
 
     public Vector3 CalculateBlockScale()
     {
-        Vector3 result = new Vector3(Camera.main.orthographicSize / 1.5f, Camera.main.orthographicSize * Screen.height/Screen.width / 1.5f, 1f);
+        Vector2 frustrumSize = GetFrustrumSize();
+
+        int rowsNum = 7;
+        int colsNum = 7;
+
+        Vector2 textureBaseSizePixels = new Vector2(4, 4);
+
+        Vector3 result = new Vector3(
+            frustrumSize.x / colsNum * textureBaseSizePixels.x,
+            frustrumSize.y / rowsNum * textureBaseSizePixels.y,
+            1f
+            );
      
         return result;
     }
@@ -44,7 +55,8 @@ public class PooledBlock : MonoBehaviour
         float height = edgeVector.y * 2;
         float width = edgeVector.x * 2;
 
-        return new Vector2(width, height);
+        Vector2 result = new Vector2(width, height);
+        return result;
     }
 
     private void OnEnable()
