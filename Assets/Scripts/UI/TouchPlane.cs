@@ -9,8 +9,6 @@ public class TouchPlane : MonoBehaviour
     {
         worldYPos = Camera.main.ScreenToWorldPoint(transform.position).y;
         worldValueHeight = Camera.main.ScreenToWorldPoint(new Vector3(GetComponent<RectTransform>().sizeDelta.y,0f)).x;
-        Debug.Log("worldYPos " + worldYPos);
-        Debug.Log("worldValueHeight " + worldValueHeight);
     }
 
     public Vector2 GetWorldPosTopAndBottomLimits()

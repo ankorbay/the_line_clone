@@ -14,9 +14,10 @@ public class Player : MonoBehaviour
     private new Rigidbody2D rigidbody;
     private PooledBlock blockCollided;
 
-
     void Start()
     {
+        float width = Camera.main.orthographicSize * 2f * Screen.width / Screen.height;
+        transform.localScale = new Vector3(width / 15f, width / 15f, 1f);
         rigidbody = GetComponent<Rigidbody2D>();
     }
 

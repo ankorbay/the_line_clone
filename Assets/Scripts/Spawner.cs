@@ -8,7 +8,6 @@ public class Spawner : MonoBehaviour
 
     private bool isGameRunning = false;
     private bool isBonusSpawned = false;
-    private Vector3 blockScale;
     private Vector2 blocksMovementStep;
     private new Camera camera;
     private PooledBlock lastBlockSpawned;
@@ -86,7 +85,6 @@ public class Spawner : MonoBehaviour
     {
         PooledBlock block = BlockPool.Instance.Get();
         block.gameObject.transform.position = new Vector3(pos.x, pos.y, 0f);
-        block.gameObject.transform.localScale = blockScale;
         block.gameObject.SetActive(true);
 
         lastBlockSpawned = block;
