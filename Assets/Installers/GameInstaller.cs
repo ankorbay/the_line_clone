@@ -19,6 +19,5 @@ public class GameInstaller : MonoInstaller<GameInstaller>
         Container.BindFactory<PooledBlock, PooledBlock.Factory>().FromComponentInNewPrefab(blockPrefab);
         Container.BindFactory<PooledSizeReducer, PooledSizeReducer.Factory>().FromComponentInNewPrefab(sizeReducerPrefab);
         Container.BindFactory<PooledDestroyer, PooledDestroyer.Factory>().FromComponentInNewPrefab(destroyerPrefab);
-        
     }
 }
