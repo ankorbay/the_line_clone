@@ -11,14 +11,16 @@ public class Player : MonoBehaviour
     private bool isAlive = true;
     private bool isAnimationPlaying = true;
 
-    private new Rigidbody2D rigidbody;
-    private PooledBlock blockCollided;
+    Rigidbody2D rigidbody;
+    PooledBlock blockCollided;
+    SpriteRenderer renderer;
 
     void Start()
     {
         float width = Camera.main.orthographicSize * 2f * Screen.width / Screen.height;
         transform.localScale = new Vector3(width / 15f, width / 15f, 1f);
         rigidbody = GetComponent<Rigidbody2D>();
+        renderer = GetComponent<SpriteRenderer>();
     }
 
     void Update()
@@ -50,14 +52,30 @@ public class Player : MonoBehaviour
     private void TurnOnDestroyMode(int modeDuration)
     {
         isDestroyBlocksMode = true;
+
+        AnimatePlayer(modeDuration);
+
         Sequence sequence = DOTween.Sequence();
         sequence.AppendInterval(modeDuration);
         for (int i = 0; i <= modeDuration; i++)
         {
             int timeLeft = modeDuration - i;
-            sequence.InsertCallback( i, ()=>UpdateTimeLeft(timeLeft));
+            sequence.InsertCallback(i, () => UpdateTimeLeft(timeLeft));
         }
         sequence.AppendCallback(TurnOffDestroyMode);
+    }
+
+    private void AnimatePlayer(int modeDuration)
+    {
+        Color baseColor = renderer.color;
+
+        float playTime = 1f;
+        Sequence mySequence = DOTween.Sequence();
+        for (int i = 0; i < (int)modeDuration/2; i++)
+        {
+            mySequence.Append(renderer.DOColor(Color.cyan, playTime));
+            mySequence.Append(renderer.DOColor(baseColor, playTime));
+        }
     }
 
     private void UpdateTimeLeft(int i)
