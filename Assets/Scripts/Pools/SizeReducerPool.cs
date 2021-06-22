@@ -36,6 +36,7 @@ public class SizeReducerPool : MonoBehaviour
         for (int i = 0; i < count; i++)
         {
             PooledSizeReducer sizeReducer = _pooledSizeReducerFactory.Create();
+            sizeReducer.gameObject.transform.parent = gameObject.transform;
             sizeReducer.gameObject.SetActive(false);
             sizeReducersAvailable.Enqueue(sizeReducer);
         }

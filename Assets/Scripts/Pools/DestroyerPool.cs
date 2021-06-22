@@ -36,6 +36,7 @@ public class DestroyerPool : MonoBehaviour
         for (int i = 0; i < count; i++)
         {
             PooledDestroyer destroyer = _pooledDestroyerFactory.Create();
+            destroyer.gameObject.transform.parent = gameObject.transform;
             destroyer.gameObject.SetActive(false);
             destroyersAvailable.Enqueue(destroyer);
         }

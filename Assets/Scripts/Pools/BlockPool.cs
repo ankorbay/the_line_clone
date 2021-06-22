@@ -31,6 +31,7 @@ public class BlockPool : MonoBehaviour
         for (int i = 0; i < count; i++)
         {
             PooledBlock block = _pooledBlockFactory.Create();
+            block.gameObject.transform.parent = gameObject.transform;
             block.gameObject.SetActive(false);
             blocksAvailable.Enqueue(block);
         }
