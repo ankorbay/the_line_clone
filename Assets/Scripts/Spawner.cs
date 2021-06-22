@@ -16,7 +16,7 @@ public class Spawner : MonoBehaviour
     private void Awake()
     {
         camera = Camera.main;
-        blocksMovementStep = CalculateBlockStep(7, 7);
+        blocksMovementStep = ScreenData.CalculateBlockStep(7);
         lastEmptyBlockIndices = new Queue<int>();
         lastEmptyBlockIndices.Enqueue(4);
     }
@@ -194,27 +194,6 @@ public class Spawner : MonoBehaviour
     {
         isGameRunning = true;
         DOTween.PlayAll();
-    }
-
-    private Vector2 CalculateBlockStep(int rows, int cols)
-    {
-        Vector2 frustrumSize = GetFrustrumSize();
-
-        float stepX = frustrumSize.x / cols;
-        float stepY = frustrumSize.y / rows;
-
-        return new Vector2(stepX, stepY);
-    }
-
-    public Vector2 GetFrustrumSize()
-    {
-        Vector2 topRightCorner = new Vector2(1, 1);
-        Vector2 edgeVector = camera.ViewportToWorldPoint(topRightCorner);
-
-        float height = edgeVector.y * 2;
-        float width = edgeVector.x * 2;
-
-        return new Vector2(width, height);
     }
 
     private float CalculateColXPos(int colNum)

@@ -19,56 +19,15 @@ public class PooledBlock : MonoBehaviour
         transform.DOKill();
     }
 
-    public Vector3 CalculateBlockScale()
-    {
-        Vector2 frustrumSize = GetFrustrumSize();
-
-        int rowsNum = 7;
-        int colsNum = 7;
-
-        Vector2 textureBaseSizePixels = new Vector2(4, 4);
-
-        Vector3 result = new Vector3(
-            frustrumSize.x / colsNum * textureBaseSizePixels.x,
-            frustrumSize.y / rowsNum * textureBaseSizePixels.y,
-            1f
-            );
-     
-        return result;
-    }
-
-    public Vector2 CalculateBlockStep(int rows, int cols)
-    {
-        Vector2 frustrumSize = GetFrustrumSize();
-
-        float stepX = frustrumSize.x / cols;
-        float stepY = frustrumSize.y / rows;
-
-        return new Vector2(stepX, stepY);
-    }
-
-    public Vector2 GetFrustrumSize()
-    {
-        Vector2 topRightCorner = new Vector2(1, 1);
-        Vector2 edgeVector = camera.ViewportToWorldPoint(topRightCorner);
-
-        float height = edgeVector.y * 2;
-        float width = edgeVector.x * 2;
-
-        Vector2 result = new Vector2(width, height);
-        return result;
-    }
-
     private void OnEnable()
     {
         camera = Camera.main;
-        blockScale = CalculateBlockScale();
+        blockScale = ScreenData.CalculateBlockScale();
         transform.localScale = blockScale;
     }
     private void Start()
     {
-
-        blocksMovementStep = CalculateBlockStep(7, 7);
+        blocksMovementStep = ScreenData.CalculateBlockStep(7);
         renderer = GetComponent<SpriteRenderer>();
     }
 
