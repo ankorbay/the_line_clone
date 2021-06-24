@@ -4,11 +4,11 @@ using UnityEngine.SceneManagement;
 
 public class GameController : MonoBehaviour
 {
-    private Spawner spawner;
-    private Player playerController;
-    private PlayerPositionController playerPositionController;
-    private Score score;
-    private InfoPlane infoPlane;
+    Spawner spawner;
+    Player playerController;
+    PlayerPositionController playerPositionController;
+    Score score;
+    InfoPlane infoPlane;
 
     [Inject]
     public void Init(Spawner spawner, Player playerController, Score score, InfoPlane infoPlane, PlayerPositionController playerPositionController)
@@ -19,6 +19,7 @@ public class GameController : MonoBehaviour
         this.infoPlane = infoPlane;
         this.playerPositionController = playerPositionController;
     }
+
 
     void Update()
     {
@@ -38,13 +39,13 @@ public class GameController : MonoBehaviour
             }
         }
 
-        if (playerController.isDestroyBlocksMode)
+        if (playerController.IsDestroyBlocksMode)
         {
             infoPlane.MakeVisible();
             int timeLeft = playerController.GetModeActiveTimeLeft();
             infoPlane.SetText("Destroy block mode time left " + timeLeft);
         }
-        else if (playerController.isSizeReducerMode)
+        else if (playerController.IsSizeReducerMode)
         {
             infoPlane.MakeVisible();
             int timeLeft = playerController.GetModeActiveTimeLeft();
@@ -56,14 +57,15 @@ public class GameController : MonoBehaviour
         }
     }
 
-    private void StartTheGame()
+
+    void StartTheGame()
     {
         score.RunScore();
         playerPositionController.TurnOnControls();
         spawner.MoveBlocks();
     }
 
-    private void StopTheGame()
+    void StopTheGame()
     {
         SceneManager.LoadScene(1);
     }

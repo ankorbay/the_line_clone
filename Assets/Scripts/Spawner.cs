@@ -4,24 +4,29 @@ using DG.Tweening;
 
 public class Spawner : MonoBehaviour
 {
-    [SerializeField][Range(0, 10)] private float speed = 8.5f;
+    const int NUMBER_OF_COLS_PER_ROW = 7;
+    const int LAST_STARTING_EMPTY_BLOCK_INDEX = 4;
+    const float BONUS_SPAWN_CHANCE = 0.3f;
 
-    private bool isGameRunning = false;
-    private bool isBonusSpawned = false;
-    private Vector2 blocksMovementStep;
-    private new Camera camera;
-    private PooledBlock lastBlockSpawned;
-    public Queue<int> lastEmptyBlockIndices;
-    
-    private void Awake()
+    [SerializeField][Range(0, 10)] float speed = 8.5f;
+
+    bool isGameRunning = false;
+    bool isBonusSpawned = false;
+
+    Vector2 blocksMovementStep;
+
+    PooledBlock lastBlockSpawned;
+    Queue<int> lastEmptyBlockIndices;
+
+
+    void Awake()
     {
-        camera = Camera.main;
-        blocksMovementStep = ScreenData.CalculateBlockStep(7);
+        blocksMovementStep = ScreenData.CalculateBlockStep(NUMBER_OF_COLS_PER_ROW);
         lastEmptyBlockIndices = new Queue<int>();
-        lastEmptyBlockIndices.Enqueue(4);
+        lastEmptyBlockIndices.Enqueue(LAST_STARTING_EMPTY_BLOCK_INDEX);
     }
 
-    private void Start()
+    void Start()
     {
         BlockPool.Instance.AddBlocks(100);
         SizeReducerPool.Instance.AddSizeReducers(1);
@@ -30,7 +35,7 @@ public class Spawner : MonoBehaviour
         SpawnStartingSet();
     }
 
-    private void Update()
+    void Update()
     {
         if (BlockSpawningCondition())
         {
@@ -38,7 +43,51 @@ public class Spawner : MonoBehaviour
         }
     }
 
-    private void SpawnStartingSet()
+
+    #region Transformation
+
+    public void MoveBlocks()
+    {
+        isGameRunning = true;
+        DOTween.PlayAll();
+    }
+
+    float CalculateColXPos(int colNum)
+    {
+        return (colNum - 4) * blocksMovementStep.x;
+    }
+
+    float CalculateRowYPos(int rowNum)
+    {
+        return (rowNum - 4) * blocksMovementStep.y;
+    }
+
+    void SetUpObjectMovement(GameObject gameObject, bool pauseOnStart)
+    {
+        gameObject.transform.DOLocalMoveY(gameObject.transform.position.y - blocksMovementStep.y * 10f, speed).SetEase(Ease.Linear);
+        if (pauseOnStart) gameObject.transform.DOPause();
+    }
+
+    bool StartPositioningCondition(int row, int col)
+    {
+        bool conditionLine1 = row == 1 && (col == 1 || col == 7);
+        bool conditionLine2 = row == 2 && (col == 1 || col == 7);
+        bool conditionLine3 = row == 3 && (col == 1 || col == 2 || col == 6 || col == 7);
+        bool conditionLine4 = row == 4 && (col == 1 || col == 2 || col == 6 || col == 7);
+        bool conditionLine5 = row == 5 && (col == 1 || col == 2 || col == 6 || col == 7);
+        bool conditionLine6 = row == 6 && !(col == 4);
+        bool conditionLine7 = row == 7 && !(col == 4);
+        bool conditionLine8 = row == 8 && !(col == 4);
+        bool conditionLine9 = row == 9 && !(col == 4);
+
+        return conditionLine1 || conditionLine2 || conditionLine3 || conditionLine4 || conditionLine5 || conditionLine6 || conditionLine7 || conditionLine8 || conditionLine9;
+    }
+
+    #endregion
+
+
+    #region Spawning
+    void SpawnStartingSet()
     {
         for (int i = 1; i < 10; i++)
         {
@@ -46,7 +95,7 @@ public class Spawner : MonoBehaviour
         }
     }
 
-    private void SpawnDestroyer(Vector2 pos)
+    void SpawnDestroyer(Vector2 pos)
     {
         isBonusSpawned = true;
 
@@ -58,7 +107,7 @@ public class Spawner : MonoBehaviour
         SetNextSpawnMinTimeout(12f);
     }
 
-    private void SetNextSpawnMinTimeout(float timeoutSec)
+    void SetNextSpawnMinTimeout(float timeoutSec)
     {
         Sequence myTimeoutSequence = DOTween.Sequence();
         myTimeoutSequence.AppendInterval(timeoutSec);
@@ -69,7 +118,7 @@ public class Spawner : MonoBehaviour
         }
     }
 
-    private void SpawnSizeReducer(Vector2 pos)
+    void SpawnSizeReducer(Vector2 pos)
     {
         isBonusSpawned = true;
 
@@ -81,7 +130,7 @@ public class Spawner : MonoBehaviour
         SetNextSpawnMinTimeout(12f);
     }
 
-    private void SpawnBlock(Vector2 pos, bool pauseOnStart)
+    void SpawnBlock(Vector2 pos, bool pauseOnStart)
     {
         PooledBlock block = BlockPool.Instance.Get();
         block.gameObject.transform.position = new Vector3(pos.x, pos.y, 0f);
@@ -92,15 +141,15 @@ public class Spawner : MonoBehaviour
         SetUpObjectMovement(block.gameObject, pauseOnStart);
     }
 
-    private bool BlockSpawningCondition()
+    bool BlockSpawningCondition()
     {
-        float pos = lastBlockSpawned.gameObject.transform.position.y;
-        bool isWentDownOneBlock = pos <= blocksMovementStep.y * 4.02f;
-        bool isLastBlockHigherThanViewport = pos > blocksMovementStep.y * 3.1f;
+        float lastBlockYpos = lastBlockSpawned.gameObject.transform.position.y;
+        bool isWentDownOneBlock = lastBlockYpos <= blocksMovementStep.y * 4.02f;
+        bool isLastBlockHigherThanViewport = lastBlockYpos > blocksMovementStep.y * 3.1f;
         return isWentDownOneBlock && isLastBlockHigherThanViewport && isGameRunning;
     }
 
-    private void SpawnRow(int rowNum, bool pauseOnStart)
+    void SpawnRow(int rowNum, bool pauseOnStart)
     {
         float posY = CalculateRowYPos(rowNum);
 
@@ -126,21 +175,21 @@ public class Spawner : MonoBehaviour
         }
     }
 
-    private void SpawnBonus(float posY, float posX)
+    void SpawnBonus(float posY, float posX)
     {
         if (!isBonusSpawned)
         {
-            if (PassFail(0.3f))
+            if (PassFail(BONUS_SPAWN_CHANCE))
             {
                 SpawnDestroyer(new Vector2(posX, posY));
-            } else if (PassFail(0.3f))
+            } else if (PassFail(BONUS_SPAWN_CHANCE))
             {
                 SpawnSizeReducer(new Vector2(posX, posY));
             }
         }
     }
 
-    private void SpawnStartRow(int rowNum, bool pauseOnStart)
+    void SpawnStartRow(int rowNum, bool pauseOnStart)
     {
         float posY = CalculateRowYPos(rowNum);
         for (int colNum = 1; colNum < 8; colNum++)
@@ -150,7 +199,7 @@ public class Spawner : MonoBehaviour
         }
     }
 
-    private Queue<int> GenerateEmptyBlockColIndices(Queue<int> lastEmptyBlockIndices)
+    Queue<int> GenerateEmptyBlockColIndices(Queue<int> lastEmptyBlockIndices)
     {
         Queue<int> newRowIndices = new Queue<int>();
 
@@ -187,55 +236,16 @@ public class Spawner : MonoBehaviour
 
         return newRowIndices;
     }
-
-    #region Transformation
-
-    public void MoveBlocks()
-    {
-        isGameRunning = true;
-        DOTween.PlayAll();
-    }
-
-    private float CalculateColXPos(int colNum)
-    {
-        return (colNum - 4) * blocksMovementStep.x;
-    }
-
-    private float CalculateRowYPos(int rowNum)
-    {
-        return (rowNum - 4) * blocksMovementStep.y;
-    }
-
-    private void SetUpObjectMovement(GameObject gameObject, bool pauseOnStart)
-    {
-        gameObject.transform.DOLocalMoveY(gameObject.transform.position.y - blocksMovementStep.y * 10f, speed).SetEase(Ease.Linear);
-        if (pauseOnStart) gameObject.transform.DOPause();
-    }
-
-    private bool StartPositioningCondition(int row, int col)
-    {
-        bool conditionLine1 = row == 1 && (col == 1 || col == 7);
-        bool conditionLine2 = row == 2 && (col == 1 || col == 7);
-        bool conditionLine3 = row == 3 && (col == 1 || col == 2 || col == 6 || col == 7);
-        bool conditionLine4 = row == 4 && (col == 1 || col == 2 || col == 6 || col == 7);
-        bool conditionLine5 = row == 5 && (col == 1 || col == 2 || col == 6 || col == 7);
-        bool conditionLine6 = row == 6 && !(col == 4);
-        bool conditionLine7 = row == 7 && !(col == 4);
-        bool conditionLine8 = row == 8 && !(col == 4);
-        bool conditionLine9 = row == 9 && !(col == 4);
-
-        return conditionLine1 || conditionLine2 || conditionLine3 || conditionLine4 || conditionLine5 || conditionLine6 || conditionLine7 || conditionLine8 || conditionLine9;
-    }
-
     #endregion
 
+
     #region Utilities
-    private bool PassFail(float chanceOfSuccess)
+    bool PassFail(float chanceOfSuccess)
     {
         return Random.value < chanceOfSuccess;
     }
 
-    private int RandomNumber(int min, int max)
+    int RandomNumber(int min, int max)
     {
         return UnityEngine.Random.Range(min, max);
     }

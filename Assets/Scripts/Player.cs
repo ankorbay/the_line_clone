@@ -1,24 +1,36 @@
 ﻿using UnityEngine;
 using DG.Tweening;
-using System;
 
 public class Player : MonoBehaviour
 {
-    public bool isDestroyBlocksMode = false;
-    public bool isSizeReducerMode = false;
+    public bool IsDestroyBlocksMode
+    {
+        get => isDestroyBlocksMode;
+        private set => isDestroyBlocksMode = value;
+    }
 
-    private int modeActiveTimeLeft;
-    private bool isAlive = true;
-    private bool isAnimationPlaying = true;
+    public bool IsSizeReducerMode
+    {
+        get => isSizeReducerMode;
+        private set => isSizeReducerMode = value;
+    }
+
+    bool isDestroyBlocksMode = false;
+    bool isSizeReducerMode = false;
+    bool isAlive = true;
+    bool isAnimationPlaying = true;
+    int modeActiveTimeLeft;
 
     Rigidbody2D rigidbody;
     PooledBlock blockCollided;
     SpriteRenderer renderer;
 
+
     void Start()
     {
-        float width = Camera.main.orthographicSize * 2f * Screen.width / Screen.height;
-        transform.localScale = new Vector3(width / 15f, width / 15f, 1f);
+        float screenWidth = Camera.main.orthographicSize * 2f * Screen.width / Screen.height;
+        transform.localScale = new Vector3(screenWidth / 15f, screenWidth / 15f, 1f);
+
         rigidbody = GetComponent<Rigidbody2D>();
         renderer = GetComponent<SpriteRenderer>();
     }
@@ -28,9 +40,20 @@ public class Player : MonoBehaviour
         CheckIfCollisionAnimationComplete();
     }
 
+
+    public bool IsAlive()
+    {
+        return isAlive;
+    }
+
+    public bool IsAnimationPlaying()
+    {
+        return isAnimationPlaying;
+    }
+
     public int GetModeActiveTimeLeft()
     {
-        if(isDestroyBlocksMode || isSizeReducerMode)
+        if(IsDestroyBlocksMode || IsSizeReducerMode)
         {
             return modeActiveTimeLeft;
         } else
@@ -39,7 +62,9 @@ public class Player : MonoBehaviour
         }
     }
 
-    private void CheckIfCollisionAnimationComplete()
+
+    #region Modes and State Management
+    void CheckIfCollisionAnimationComplete()
     {
         if (blockCollided != null)
         {
@@ -47,11 +72,9 @@ public class Player : MonoBehaviour
         }
     }
 
-    #region Modes and State Management
-
-    private void TurnOnDestroyMode(int modeDuration)
+    void TurnOnDestroyMode(int modeDuration)
     {
-        isDestroyBlocksMode = true;
+        IsDestroyBlocksMode = true;
 
         AnimatePlayer(modeDuration);
 
@@ -65,7 +88,7 @@ public class Player : MonoBehaviour
         sequence.AppendCallback(TurnOffDestroyMode);
     }
 
-    private void AnimatePlayer(int modeDuration)
+    void AnimatePlayer(int modeDuration)
     {
         Color baseColor = renderer.color;
 
@@ -78,23 +101,23 @@ public class Player : MonoBehaviour
         }
     }
 
-    private void UpdateTimeLeft(int i)
+    void UpdateTimeLeft(int i)
     {
         modeActiveTimeLeft = i;
     }
 
-    private void TurnOffDestroyMode()
+    void TurnOffDestroyMode()
     {
-        isDestroyBlocksMode = false;
+        IsDestroyBlocksMode = false;
     }
 
-    private void TurnOnSizeReducerMode()
+    void TurnOnSizeReducerMode()
     {
-        isSizeReducerMode = true;
+        IsSizeReducerMode = true;
         ScaleDown(10);
     }
 
-    private void ScaleDown(int modeDuration)
+    void ScaleDown(int modeDuration)
     {
         int scaleUpDownDuration = 1;
         Tween scaleTween = gameObject.transform.DOScale(gameObject.transform.localScale * 0.4f, scaleUpDownDuration);
@@ -110,34 +133,24 @@ public class Player : MonoBehaviour
         sequence.AppendCallback(()=>ScaleUp(scaleUpDownDuration));
     }
 
-    private void ScaleUp(int duration)
+    void ScaleUp(int duration)
     {
         gameObject.transform.DOScale(gameObject.transform.localScale / 0.4f, 1f).OnComplete(TurnOffSizeReducerMode);
     }
 
-    private void TurnOffSizeReducerMode()
+    void TurnOffSizeReducerMode()
     {
-        isSizeReducerMode = false;
+        IsSizeReducerMode = false;
     }
 
-    public bool IsAlive()
-    {
-        return isAlive;
-    }
-
-    public bool IsAnimationPlaying()
-    {
-        return isAnimationPlaying;
-    }
-
-    public void Disactivate(Vector3 pos)
+    void Disactivate(Vector3 pos)
     {
         rigidbody.simulated = false;
         isAlive = false;
         gameObject.transform.position = pos;
     }
 
-    private void OnCollisionEnter2D(Collision2D collision)
+    void OnCollisionEnter2D(Collision2D collision)
     {
         GameObject colliderGO = collision.collider.gameObject;
         ContactPoint2D contact = collision.GetContact(0);
@@ -145,7 +158,7 @@ public class Player : MonoBehaviour
         {
             blockCollided = collision.collider.gameObject.GetComponent<PooledBlock>();
 
-            if (isDestroyBlocksMode)
+            if (IsDestroyBlocksMode)
             {
                 blockCollided.Disable();
             }
@@ -163,8 +176,5 @@ public class Player : MonoBehaviour
             TurnOnSizeReducerMode();
         }
     }
-
     #endregion
-
-
 }
