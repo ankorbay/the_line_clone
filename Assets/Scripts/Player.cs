@@ -3,6 +3,9 @@ using DG.Tweening;
 
 public class Player : MonoBehaviour
 {
+    const float SCALE_DOWN_MODE_COEFF = 0.5f;
+
+
     public bool IsDestroyBlocksMode
     {
         get => isDestroyBlocksMode;
@@ -120,7 +123,7 @@ public class Player : MonoBehaviour
     void ScaleDown(int modeDuration)
     {
         int scaleUpDownDuration = 1;
-        Tween scaleTween = gameObject.transform.DOScale(gameObject.transform.localScale * 0.4f, scaleUpDownDuration);
+        Tween scaleTween = gameObject.transform.DOScale(gameObject.transform.localScale * SCALE_DOWN_MODE_COEFF, scaleUpDownDuration);
 
         Sequence sequence = DOTween.Sequence();
         sequence.Append(scaleTween);
@@ -135,7 +138,7 @@ public class Player : MonoBehaviour
 
     void ScaleUp(int duration)
     {
-        gameObject.transform.DOScale(gameObject.transform.localScale / 0.4f, 1f).OnComplete(TurnOffSizeReducerMode);
+        gameObject.transform.DOScale(gameObject.transform.localScale / SCALE_DOWN_MODE_COEFF, duration).OnComplete(TurnOffSizeReducerMode);
     }
 
     void TurnOffSizeReducerMode()
