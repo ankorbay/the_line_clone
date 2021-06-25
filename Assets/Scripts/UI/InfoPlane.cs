@@ -3,7 +3,8 @@ using UnityEngine.UI;
 
 public class InfoPlane : MonoBehaviour
 {
-    private Text txt;
+    Text txt;
+
 
     public void MakeVisible()
     {
@@ -25,12 +26,5 @@ public class InfoPlane : MonoBehaviour
     {
         txt = GetComponent<Text>();
         if(txt != null) txt.text = text;
-    }
-
-    void Update()
-    {
-        
-    }
-
-    
+    }    
 }

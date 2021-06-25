@@ -2,14 +2,16 @@
 
 public class TouchPlane : MonoBehaviour
 {
-    private float worldYPos;
-    private float worldValueHeight;
+    float worldYPos;
+    float worldValueHeight;
+
 
     void Start()
     {
         worldYPos = Camera.main.ScreenToWorldPoint(transform.position).y;
         worldValueHeight = Camera.main.ScreenToWorldPoint(new Vector3(GetComponent<RectTransform>().sizeDelta.y,0f)).x;
     }
+
 
     public Vector2 GetWorldPosTopAndBottomLimits()
     {

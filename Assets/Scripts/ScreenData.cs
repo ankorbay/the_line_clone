@@ -20,7 +20,7 @@ public class ScreenData
 
         int colsNum = 7;
 
-        Vector2 textureBaseSizePixels = new Vector2(4, 4);
+        Vector2 textureBaseSizePixels = new Vector2(4, 4); // default block's sprite size
 
         float blockScaleX = frustrumSize.x / colsNum * textureBaseSizePixels.x;
         float blockScaleY = blockScaleX * 2f;
@@ -39,7 +39,4 @@ public class ScreenData
 
         return new Vector2(stepX, stepY);
     }
-
-
-
 }

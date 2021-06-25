@@ -3,11 +3,12 @@ using UnityEngine.UI;
 
 public class MenuScore : MonoBehaviour
 {
-    private Text txt;
+    Text txt;
 
-    private int currentScore;
-    private int savedBest;
-    private int newBest;
+    int currentScore;
+    int savedBest;
+    int newBest;
+
 
     void Start()
     {

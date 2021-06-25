@@ -4,9 +4,9 @@ using Zenject;
 
 public class BlockPool : MonoBehaviour
 {
-    public static BlockPool Instance { get; private set; }
+    public static BlockPool Instance { get; set; }
 
-    private PooledBlock.Factory _pooledBlockFactory;
+    PooledBlock.Factory _pooledBlockFactory;
 
     [Inject]
     public void Construct(PooledBlock.Factory pooledBlockFactory)
@@ -14,7 +14,14 @@ public class BlockPool : MonoBehaviour
         this._pooledBlockFactory = pooledBlockFactory;
     }
 
-    private Queue<PooledBlock> blocksAvailable = new Queue<PooledBlock>();
+    Queue<PooledBlock> blocksAvailable = new Queue<PooledBlock>();
+
+
+    void Awake()
+    {
+        Instance = this;
+    }
+
 
     public PooledBlock Get()
     {
@@ -41,10 +48,5 @@ public class BlockPool : MonoBehaviour
     public void Return(PooledBlock block)
     {
         blocksAvailable.Enqueue(block);
-    }
-
-    private void Awake()
-    {
-        Instance = this;
     }
 }

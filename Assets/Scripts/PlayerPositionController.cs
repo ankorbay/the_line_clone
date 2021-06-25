@@ -3,18 +3,19 @@ using Zenject;
 
 public class PlayerPositionController : MonoBehaviour
 {
-    private bool useInputDataForPositioning = false;
+    bool useInputDataForPositioning = false;
 
-    private float width;
-    private float height;
+    float width;
+    float height;
 
-    private TouchPlane touchPlane;
+    TouchPlane touchPlane;
 
     [Inject]
-    private void Construct(TouchPlane touchPlane)
+    void Construct(TouchPlane touchPlane)
     {
         this.touchPlane = touchPlane;
     }
+
 
     void Start()
     {
@@ -29,6 +30,7 @@ public class PlayerPositionController : MonoBehaviour
         UpdatePlayerPos();
     }
 
+
     public void TurnOnControls()
     {
         useInputDataForPositioning = true;
@@ -39,7 +41,7 @@ public class PlayerPositionController : MonoBehaviour
         useInputDataForPositioning = false;
     }
 
-    private void UpdatePlayerPos()
+    void UpdatePlayerPos()
     {
         if(useInputDataForPositioning)
         {
@@ -47,7 +49,7 @@ public class PlayerPositionController : MonoBehaviour
         }
     }
 
-    private Vector3 GetLastTouchPos()
+    Vector3 GetLastTouchPos()
     {
         Vector2 limits = touchPlane.GetWorldPosTopAndBottomLimits();
         Vector3 lastPos = transform.position;

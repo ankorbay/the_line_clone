@@ -3,22 +3,22 @@ using UnityEngine.UI;
 
 public class Score : MonoBehaviour
 {
-    [SerializeField] [Range(1,10)] private float speed = 2.5f;
+    [SerializeField] [Range(1,10)] float speed = 2.5f;
 
-    private Text txt;
-    private bool isGameRunning;
-    private float score;
-    private int intScore;
-    private float amountPerSecond;
-    private int bestSaved;
+    Text txt;
+
+    bool isGameRunning;
+
+    float score = 0;
+    float amountPerSecond = 1f;
+    int intScore;
+    int bestSaved;
+
 
     void Start()
     {
         txt = GetComponent<Text>();
         txt.text = "Score";
-
-        score = 0;
-        amountPerSecond = 1;
     }
 
     void Update()
@@ -30,6 +30,7 @@ public class Score : MonoBehaviour
             score += amountPerSecond * Time.deltaTime * speed;
         }
     }
+
 
     public void RunScore()
     {

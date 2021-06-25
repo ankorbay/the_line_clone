@@ -4,13 +4,39 @@ using Zenject;
 
 public class PooledBlock : MonoBehaviour
 {
+    const int NUMBER_OF_COLS_PER_ROW = 7;
+
+
     public bool isDestroyable;
     public bool isAnimationComplete;
 
-    private new SpriteRenderer renderer;
-    private new Camera camera;
-    private Vector3 blockScale;
-    private Vector2 blocksMovementStep;
+    SpriteRenderer renderer;
+    Camera camera;
+
+    Vector3 blockScale;
+    Vector2 blocksMovementStep;
+
+
+    void OnEnable()
+    {
+        camera = Camera.main;
+        blockScale = ScreenData.CalculateBlockScale();
+        transform.localScale = blockScale;
+    }
+    void Start()
+    {
+        blocksMovementStep = ScreenData.CalculateBlockStep(NUMBER_OF_COLS_PER_ROW);
+        renderer = GetComponent<SpriteRenderer>();
+    }
+
+    void Update()
+    {
+        if (transform.position.y < -blocksMovementStep.y * 4f)
+        {
+            Disable();
+        }
+    }
+
 
     public void Disable()
     {
@@ -19,29 +45,9 @@ public class PooledBlock : MonoBehaviour
         transform.DOKill();
     }
 
-    private void OnEnable()
-    {
-        camera = Camera.main;
-        blockScale = ScreenData.CalculateBlockScale();
-        transform.localScale = blockScale;
-    }
-    private void Start()
-    {
-        blocksMovementStep = ScreenData.CalculateBlockStep(7);
-        renderer = GetComponent<SpriteRenderer>();
-    }
-
-    private void Update()
-    {
-        if (transform.position.y < -blocksMovementStep.y * 4f)
-        {
-            Disable();
-        }
-    }
 
     #region Collisions
-
-    private void OnCollisionEnter2D(Collision2D collision)
+    void OnCollisionEnter2D(Collision2D collision)
     {
         if (!collision.collider.gameObject.GetComponent<Player>().IsDestroyBlocksMode)
         {
@@ -49,7 +55,7 @@ public class PooledBlock : MonoBehaviour
         }
     }
 
-    private void AnimateBlockCollision()
+    void AnimateBlockCollision()
     {
         DOTween.KillAll();
 
@@ -64,12 +70,13 @@ public class PooledBlock : MonoBehaviour
         mySequence.AppendCallback(SetAnimationComplete);
     }
 
-    private void SetAnimationComplete()
+    void SetAnimationComplete()
     {
         isAnimationComplete = true;
     }
 
     #endregion
+
 
     public class Factory : PlaceholderFactory<PooledBlock>
     {

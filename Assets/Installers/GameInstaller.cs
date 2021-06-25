@@ -3,9 +3,10 @@ using Zenject;
 
 public class GameInstaller : MonoInstaller<GameInstaller>
 {
-    public GameObject sizeReducerPrefab;
-    public GameObject destroyerPrefab;
-    public GameObject blockPrefab;
+    [SerializeField] GameObject sizeReducerPrefab;
+    [SerializeField] GameObject destroyerPrefab;
+    [SerializeField] GameObject blockPrefab;
+
 
     public override void InstallBindings()
     {

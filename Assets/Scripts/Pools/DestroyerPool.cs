@@ -4,9 +4,9 @@ using Zenject;
 
 public class DestroyerPool : MonoBehaviour
 {
-    public static DestroyerPool Instance { get; private set; }
+    public static DestroyerPool Instance { get; set; }
 
-    private PooledDestroyer.Factory _pooledDestroyerFactory;
+    PooledDestroyer.Factory _pooledDestroyerFactory;
 
     [Inject]
     public void Construct(PooledDestroyer.Factory pooledDestroyerFactory)
@@ -14,12 +14,14 @@ public class DestroyerPool : MonoBehaviour
         this._pooledDestroyerFactory = pooledDestroyerFactory;
     }
 
-    private Queue<PooledDestroyer> destroyersAvailable = new Queue<PooledDestroyer>();
+    Queue<PooledDestroyer> destroyersAvailable = new Queue<PooledDestroyer>();
 
-    private void Awake()
+
+    void Awake()
     {
         Instance = this;
     }
+
 
     public PooledDestroyer Get()
     {

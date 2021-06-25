@@ -4,9 +4,9 @@ using Zenject;
 
 public class SizeReducerPool : MonoBehaviour
 {
-    public static SizeReducerPool Instance { get; private set; }
+    public static SizeReducerPool Instance { get; set; }
 
-    private PooledSizeReducer.Factory _pooledSizeReducerFactory;
+    PooledSizeReducer.Factory _pooledSizeReducerFactory;
 
     [Inject]
     public void Construct(PooledSizeReducer.Factory pooledSizeReducerFactory)
@@ -14,12 +14,14 @@ public class SizeReducerPool : MonoBehaviour
         this._pooledSizeReducerFactory = pooledSizeReducerFactory;
     }
 
-    private Queue<PooledSizeReducer> sizeReducersAvailable = new Queue<PooledSizeReducer>();
+    Queue<PooledSizeReducer> sizeReducersAvailable = new Queue<PooledSizeReducer>();
 
-    private void Awake()
+
+    void Awake()
     {
         Instance = this;
     }
+
 
     public PooledSizeReducer Get()
     {

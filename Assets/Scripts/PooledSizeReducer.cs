@@ -12,16 +12,18 @@ public class PooledSizeReducer : MonoBehaviour
         sequence.AppendCallback(Destroy);
     }
 
-    private void Destroy()
+
+    void Destroy()
     {
         gameObject.SetActive(false);
         SizeReducerPool.Instance.Return(this);
     }
 
-    private void OnCollisionEnter2D(Collision2D collision)
+    void OnCollisionEnter2D(Collision2D collision)
     {
         Destroy();
     }
+
 
     public class Factory : PlaceholderFactory<PooledSizeReducer>
     {
