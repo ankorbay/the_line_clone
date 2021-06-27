@@ -21,7 +21,8 @@ public class TouchPlane : MonoBehaviour
         rectTransform.sizeDelta = new Vector2(rectTransform.sizeDelta.x, newPlaneHeight);
 
         worldYPos = Camera.main.ScreenToWorldPoint(transform.position).y;
-        worldValueHeight = Camera.main.ScreenToWorldPoint(new Vector3(GetComponent<RectTransform>().sizeDelta.y,0f)).x;
+        worldValueHeight = Camera.main.ScreenToWorldPoint(new Vector3(rectTransform.sizeDelta.y, 0f)).x;
+        rectTransform.anchoredPosition = new Vector2(rectTransform.anchoredPosition.x, frustrumHeight / 6);
     }
 
 

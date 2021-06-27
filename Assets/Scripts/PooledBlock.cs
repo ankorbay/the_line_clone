@@ -31,7 +31,7 @@ public class PooledBlock : MonoBehaviour
 
     void Update()
     {
-        if (transform.position.y < -blocksMovementStep.y * 4f)
+        if (transform.position.y < -blocksMovementStep.y * 4.5f)
         {
             Disable();
         }

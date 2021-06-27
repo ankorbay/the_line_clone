@@ -1,30 +1,29 @@
-﻿using UnityEngine;
-using UnityEngine.UI;
+﻿using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
 
 public class InfoPlane : MonoBehaviour
 {
-    Text txt;
+    const float TOUCH_PLANE_SCALE = 0.14f;
+    const float INFO_PLANE_SCALE = 0.04f;
+
+    RectTransform rectTransform;
+    float newAncoredPositionY;
+    float frustrumHeight;
+    float touchPlaneHeight;
+    float newInfoPlaneHeight;
 
 
-    public void MakeVisible()
+    void Start()
     {
-        if (!gameObject.activeInHierarchy)
-        {
-            gameObject.transform.parent.gameObject.SetActive(true);
-        }
+        rectTransform = GetComponent<RectTransform>();
+        frustrumHeight = (int)Screen.height;
+
+        touchPlaneHeight = frustrumHeight * TOUCH_PLANE_SCALE;
+        newInfoPlaneHeight = frustrumHeight * INFO_PLANE_SCALE;
+        rectTransform.sizeDelta = new Vector2(rectTransform.sizeDelta.x, newInfoPlaneHeight);
+
+        newAncoredPositionY = frustrumHeight / 6f + touchPlaneHeight/2f + newInfoPlaneHeight/2f;
+        rectTransform.anchoredPosition = new Vector2(rectTransform.anchoredPosition.x, newAncoredPositionY);
     }
-
-    public void Hide()
-    {
-        if (gameObject.activeInHierarchy)
-        {
-            gameObject.transform.parent.gameObject.SetActive(false);
-        }
-    }
-
-    public void SetText(string text)
-    {
-        txt = GetComponent<Text>();
-        if(txt != null) txt.text = text;
-    }    
 }

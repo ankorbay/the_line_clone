@@ -8,15 +8,15 @@ public class GameController : MonoBehaviour
     Player playerController;
     PlayerPositionController playerPositionController;
     Score score;
-    InfoPlane infoPlane;
+    InfoPlaneText infoPlaneText;
 
     [Inject]
-    public void Init(Spawner spawner, Player playerController, Score score, InfoPlane infoPlane, PlayerPositionController playerPositionController)
+    public void Init(Spawner spawner, Player playerController, Score score, InfoPlaneText infoPlaneText, PlayerPositionController playerPositionController)
     {
         this.spawner = spawner;
         this.playerController = playerController;
         this.score = score;
-        this.infoPlane = infoPlane;
+        this.infoPlaneText = infoPlaneText;
         this.playerPositionController = playerPositionController;
     }
 
@@ -41,19 +41,19 @@ public class GameController : MonoBehaviour
 
         if (playerController.IsDestroyBlocksMode)
         {
-            infoPlane.MakeVisible();
+            infoPlaneText.MakeVisible();
             int timeLeft = playerController.GetModeActiveTimeLeft();
-            infoPlane.SetText("Destroy block mode time left " + timeLeft);
+            infoPlaneText.SetText("Destroy block mode time left " + timeLeft);
         }
         else if (playerController.IsSizeReducerMode)
         {
-            infoPlane.MakeVisible();
+            infoPlaneText.MakeVisible();
             int timeLeft = playerController.GetModeActiveTimeLeft();
-            infoPlane.SetText("Size reducer mode time left " + timeLeft);
+            infoPlaneText.SetText("Size reducer mode time left " + timeLeft);
         }
         else
         {
-            infoPlane.Hide();
+            infoPlaneText.Hide();
         }
     }
 

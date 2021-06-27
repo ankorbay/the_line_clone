@@ -13,7 +13,7 @@ public class GameInstaller : MonoInstaller<GameInstaller>
         Container.Bind<Spawner>().FromInstance(FindObjectOfType<Spawner>());
         Container.Bind<Player>().FromInstance(FindObjectOfType<Player>());
         Container.Bind<Score>().FromInstance(FindObjectOfType<Score>());
-        Container.Bind<InfoPlane>().FromInstance(FindObjectOfType<InfoPlane>());
+        Container.Bind<InfoPlaneText>().FromInstance(FindObjectOfType<InfoPlaneText>());
         Container.Bind<TouchPlane>().FromInstance(FindObjectOfType<TouchPlane>());
         Container.Bind<PlayerPositionController>().FromInstance(FindObjectOfType<PlayerPositionController>());
 
