@@ -1,10 +1,8 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
+using Zenject;
 
 public class InfoPlane : MonoBehaviour
 {
-    const float TOUCH_PLANE_SCALE = 0.14f;
     const float INFO_PLANE_SCALE = 0.04f;
 
     RectTransform rectTransform;
@@ -12,6 +10,13 @@ public class InfoPlane : MonoBehaviour
     float frustrumHeight;
     float touchPlaneHeight;
     float newInfoPlaneHeight;
+    TouchPlane touchPlane;
+
+    [Inject]
+    public void Init(TouchPlane touchPlane)
+    {
+        this.touchPlane = touchPlane;
+    }
 
 
     void Start()
@@ -19,7 +24,7 @@ public class InfoPlane : MonoBehaviour
         rectTransform = GetComponent<RectTransform>();
         frustrumHeight = (int)Screen.height;
 
-        touchPlaneHeight = frustrumHeight * TOUCH_PLANE_SCALE;
+        touchPlaneHeight = frustrumHeight * touchPlane.GetTouchPlaneScale();
         newInfoPlaneHeight = frustrumHeight * INFO_PLANE_SCALE;
         rectTransform.sizeDelta = new Vector2(rectTransform.sizeDelta.x, newInfoPlaneHeight);
 
