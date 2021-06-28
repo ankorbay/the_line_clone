@@ -4,13 +4,14 @@ public class TouchPlane : MonoBehaviour
 {
     const float TOUCH_PLANE_SCALE = 0.14f;
 
+
     float worldYPos;
     float worldValueHeight;
     float newPlaneHeight;
+    float frustrumHeight;
 
     RectTransform rectTransform;
-    float frustrumHeight;
-    float newPosY;
+
 
     void Start()
     {

@@ -5,11 +5,14 @@ public class InfoPlane : MonoBehaviour
 {
     const float INFO_PLANE_SCALE = 0.04f;
 
+
     RectTransform rectTransform;
     float newAncoredPositionY;
     float frustrumHeight;
     float touchPlaneHeight;
     float newInfoPlaneHeight;
+
+
     TouchPlane touchPlane;
 
     [Inject]
