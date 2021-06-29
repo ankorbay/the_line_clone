@@ -144,7 +144,7 @@ public class Spawner : MonoBehaviour
     bool BlockSpawningCondition()
     {
         float lastBlockYpos = lastBlockSpawned.gameObject.transform.position.y;
-        bool isWentDownOneBlock = lastBlockYpos <= blocksMovementStep.y * 4.02f;
+        bool isWentDownOneBlock = lastBlockYpos <= blocksMovementStep.y * 4.04f;
         bool isLastBlockHigherThanViewport = lastBlockYpos > blocksMovementStep.y * 3.1f;
         return isWentDownOneBlock && isLastBlockHigherThanViewport && isGameRunning;
     }

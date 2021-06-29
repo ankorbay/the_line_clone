@@ -18,6 +18,8 @@ public class Player : MonoBehaviour
         private set => isSizeReducerMode = value;
     }
 
+    [SerializeField][Range(0f,0.1f)] float playerScale = 0.07f;
+
     bool isDestroyBlocksMode = false;
     bool isSizeReducerMode = false;
     bool isAlive = true;
@@ -32,7 +34,7 @@ public class Player : MonoBehaviour
     void Start()
     {
         float screenWidth = Camera.main.orthographicSize * 2f * Screen.width / Screen.height;
-        transform.localScale = new Vector3(screenWidth / 15f, screenWidth / 15f, 1f);
+        transform.localScale = new Vector3(screenWidth * playerScale, screenWidth * playerScale, 1f);
 
         rigidbody = GetComponent<Rigidbody2D>();
         renderer = GetComponent<SpriteRenderer>();
