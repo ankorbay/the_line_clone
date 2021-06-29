@@ -7,8 +7,9 @@ public class Spawner : MonoBehaviour
     const int NUMBER_OF_COLS_PER_ROW = 7;
     const int LAST_STARTING_EMPTY_BLOCK_INDEX = 4;
     const float BONUS_SPAWN_CHANCE = 0.3f;
+    const float BLOCK_Y_POS_TRACKER_MULTIPLIER = 4.1f;
 
-    [SerializeField][Range(0, 10)] float speed = 8.5f;
+    [SerializeField][Range(0, 0.5f)] float speed = 0.12f;
 
     bool isGameRunning = false;
     bool isBonusSpawned = false;
@@ -64,7 +65,7 @@ public class Spawner : MonoBehaviour
 
     void SetUpObjectMovement(GameObject gameObject, bool pauseOnStart)
     {
-        gameObject.transform.DOLocalMoveY(gameObject.transform.position.y - blocksMovementStep.y * 10f, speed).SetEase(Ease.Linear);
+        gameObject.transform.DOLocalMoveY(gameObject.transform.position.y - blocksMovementStep.y * 10f, 1f / speed).SetEase(Ease.Linear);
         if (pauseOnStart) gameObject.transform.DOPause();
     }
 
@@ -144,7 +145,7 @@ public class Spawner : MonoBehaviour
     bool BlockSpawningCondition()
     {
         float lastBlockYpos = lastBlockSpawned.gameObject.transform.position.y;
-        bool isWentDownOneBlock = lastBlockYpos <= blocksMovementStep.y * 4.04f;
+        bool isWentDownOneBlock = lastBlockYpos <= blocksMovementStep.y * BLOCK_Y_POS_TRACKER_MULTIPLIER;
         bool isLastBlockHigherThanViewport = lastBlockYpos > blocksMovementStep.y * 3.1f;
         return isWentDownOneBlock && isLastBlockHigherThanViewport && isGameRunning;
     }

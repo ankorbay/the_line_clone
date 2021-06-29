@@ -1,9 +1,10 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
+using TMPro;
 
 public class InfoPlaneText : MonoBehaviour
 {
-    Text txt;
+    [SerializeField] TMP_Text txt;
 
     public void MakeVisible()
     {
@@ -23,7 +24,6 @@ public class InfoPlaneText : MonoBehaviour
 
     public void SetText(string text)
     {
-        txt = GetComponent<Text>();
         if(txt != null) txt.text = text;
     }    
 }
