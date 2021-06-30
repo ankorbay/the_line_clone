@@ -9,15 +9,17 @@ public class GameController : MonoBehaviour
     PlayerPositionController playerPositionController;
     Score score;
     InfoPlaneText infoPlaneText;
+    GameOverPanel gameOverPanel;
 
     [Inject]
-    public void Init(Spawner spawner, Player playerController, Score score, InfoPlaneText infoPlaneText, PlayerPositionController playerPositionController)
+    public void Init(Spawner spawner, Player playerController, Score score, InfoPlaneText infoPlaneText, PlayerPositionController playerPositionController, GameOverPanel gameOverPanel)
     {
         this.spawner = spawner;
         this.playerController = playerController;
         this.score = score;
         this.infoPlaneText = infoPlaneText;
         this.playerPositionController = playerPositionController;
+        this.gameOverPanel = gameOverPanel;
     }
 
 
@@ -67,6 +69,6 @@ public class GameController : MonoBehaviour
 
     void StopTheGame()
     {
-        SceneManager.LoadScene(1);
+        gameOverPanel.FadeIn();
     }
 }

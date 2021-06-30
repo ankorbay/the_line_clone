@@ -1,5 +1,4 @@
 ﻿using UnityEngine;
-using UnityEngine.UI;
 using TMPro;
 
 public class Score : MonoBehaviour
@@ -8,6 +7,7 @@ public class Score : MonoBehaviour
 
     [SerializeField] [Range(1,10)] float speed = 2.5f;
     [SerializeField] TMP_Text txt;
+    [SerializeField] FinalScore finalScore;
 
     bool isGameRunning;
 
@@ -26,9 +26,10 @@ public class Score : MonoBehaviour
     {
         if (isGameRunning)
         {
+            score += amountPerSecond * Time.deltaTime * speed;
             intScore = (int)score;
             txt.text = "Score \n" + intScore;
-            score += amountPerSecond * Time.deltaTime * speed;
+            
         }
     }
 
@@ -40,15 +41,11 @@ public class Score : MonoBehaviour
 
     public void StopScore()
     {
-        bestSaved = PlayerPrefs.GetInt("bestSaved");
-        isGameRunning = false;
-        if(score > bestSaved)
-        {
-            PlayerPrefs.SetInt("newBest", intScore);
-            PlayerPrefs.SetInt("current", intScore);
-        } else
+        if (isGameRunning)
         {
             PlayerPrefs.SetInt("current", intScore);
+            finalScore.UpdateScore();
         }
+        isGameRunning = false;
     }
 }

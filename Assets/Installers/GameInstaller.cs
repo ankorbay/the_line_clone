@@ -16,6 +16,7 @@ public class GameInstaller : MonoInstaller<GameInstaller>
         Container.Bind<InfoPlaneText>().FromInstance(FindObjectOfType<InfoPlaneText>());
         Container.Bind<TouchPlane>().FromInstance(FindObjectOfType<TouchPlane>());
         Container.Bind<PlayerPositionController>().FromInstance(FindObjectOfType<PlayerPositionController>());
+        Container.Bind<GameOverPanel>().FromInstance(FindObjectOfType<GameOverPanel>());
 
         Container.BindFactory<PooledBlock, PooledBlock.Factory>().FromComponentInNewPrefab(blockPrefab);
         Container.BindFactory<PooledSizeReducer, PooledSizeReducer.Factory>().FromComponentInNewPrefab(sizeReducerPrefab);
