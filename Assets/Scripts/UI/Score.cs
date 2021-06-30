@@ -1,11 +1,13 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
+using TMPro;
 
 public class Score : MonoBehaviour
 {
-    [SerializeField] [Range(1,10)] float speed = 2.5f;
+    const string DEFAULT_SCORE_VALUE = "Score";
 
-    Text txt;
+    [SerializeField] [Range(1,10)] float speed = 2.5f;
+    [SerializeField] TMP_Text txt;
 
     bool isGameRunning;
 
@@ -17,8 +19,7 @@ public class Score : MonoBehaviour
 
     void Start()
     {
-        txt = GetComponent<Text>();
-        txt.text = "Score";
+        txt.text = DEFAULT_SCORE_VALUE;
     }
 
     void Update()
